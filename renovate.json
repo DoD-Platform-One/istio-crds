@@ -1,1 +1,74 @@
-{}
+{
+  "extends": [
+    "local>platform-one/big-bang/pipeline-templates/renovate-runner"
+  ],
+  "enabledManagers": [
+    "helmv3",
+    "regex"
+  ],
+  "labels": [
+    "istioCRDs",
+    "Big Bang Core",
+    "Package Sustainment",
+    "kind::maintenance",
+    "renovate"
+  ],
+  "postUpdateOptions": [
+    "helmUpdateSubChartArchives"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update chart version to match upstream; append -bb.0",
+      "fileMatch": [
+        "^chart/Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "version:\\s+(?<currentValue>.+)-bb\\.\\d+"
+      ],
+      "autoReplaceStringTemplate": "version: {{newValue}}-bb.0",
+      "depNameTemplate": "base",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://istio-release.storage.googleapis.com/charts"
+    },
+    {
+      "customType": "regex",
+      "description": "Update chart appVersion to match upstream",
+      "fileMatch": [
+        "^chart/Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "appVersion:\\s+(?<currentValue>.+)"
+      ],
+      "autoReplaceStringTemplate": "appVersion: {{newValue}}",
+      "depNameTemplate": "base",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://istio-release.storage.googleapis.com/charts"
+    },
+    {
+      "customType": "regex",
+      "description": "Update big bang application versions",
+      "fileMatch": [
+        "^chart/Chart.yaml$"
+      ],
+      "matchStrings": [
+        "- Istio:\\s+(?<currentValue>.+)"
+      ],
+      "autoReplaceStringTemplate": "- Istio: {{newValue}}",
+      "depNameTemplate": "base",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://istio-release.storage.googleapis.com/charts"
+    }
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "regenerate-helm-docs",
+      "bump-changelog '- {{{replace 'registry1.dso.mil/' '' depName}}} updated from {{{currentVersion}}} to {{{newVersion}}}'"
+    ],
+    "fileFilters": [
+      "chart/Chart.yaml",
+      "README.md",
+      "CHANGELOG.md"
+    ]
+  }
+}
