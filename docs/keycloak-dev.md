@@ -29,8 +29,6 @@ Before deploying CHANGEME and configuring SSO, you need to deploy the dev instan
       enabled: false
     kyvernoReporter:
       enabled: false
-    promtail:
-      enabled: false
     loki:
       enabled: false
     neuvector:
