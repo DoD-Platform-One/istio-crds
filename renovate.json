@@ -20,8 +20,8 @@
     {
       "customType": "regex",
       "description": "Update chart version to match upstream; append -bb.0",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "version:\\s+(?<currentValue>.+)-bb\\.\\d+"
@@ -34,8 +34,8 @@
     {
       "customType": "regex",
       "description": "Update chart appVersion to match upstream",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "appVersion:\\s+(?<currentValue>.+)"
@@ -48,8 +48,8 @@
     {
       "customType": "regex",
       "description": "Update big bang application versions",
-      "fileMatch": [
-        "^chart/Chart.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart.yaml$/"
       ],
       "matchStrings": [
         "- Istio:\\s+(?<currentValue>.+)"
