@@ -1,34 +1,32 @@
 # Files that require bigbang integration testing
 
-### See [bb MR testing](./docs/test-package-against-bb.md) for details regarding testing changes against bigbang umbrella chart
+### See [bb MR testing](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/docs/community/development/test-package-against-bb.md?ref_type=heads) for details regarding testing changes against bigbang umbrella chart
 
-There are certain integrations within the bigbang ecosystem and this package that require additional testing outside of the specific package tests ran during CI.  This is a requirement when files within those integrations are changed, as to avoid causing breaks up through the bigbang umbrella.  Currently, these include changes to the istio implementation within the package (see: [istio templates](./chart/templates/bigbang/istio/), [network policy templates](./chart/templates/bigbang/networkpolicies/), [service entry templates](./chart/templates/bigbang/serviceentries/)).
+There are certain integrations within the bigbang ecosystem and this package that require additional testing outside of the specific package tests ran during CI.  This is a requirement when files within those integrations are changed, as to avoid causing breaks up through the bigbang umbrella.  Currently, these include changes to the istio implementation within the package (see: [istio templates](https://repo1.dso.mil/big-bang/product/packages/istiod/-/tree/0e9ab1b936939be3d58e3e63714ccae139a702d8/chart/templates/bigbang/istio)).
 
 Be aware that any changes to files listed in the [Modifications made to upstream chart](#modifications-made-to-upstream-chart) section will also require a codeowner to validate the changes using above method, to ensure that they do not affect the package or its integrations adversely.
 
-Be sure to also test against monitoring locally as it is integrated by default with these high-impact service control packages, and needs to be validated using the necessary chart values beneath `istio.hardened` block with `monitoring.enabled` set to true as part of your [dev-overrides.yaml](./docs/dev-overrides.yaml).
+Be sure to also test against monitoring locally as it is integrated by default with these high-impact service control packages, and needs to be validated using the necessary chart values beneath `istio.hardened` block with `monitoring.enabled` set to true as part of your [dev-overrides.yaml](./dev-overrides.yaml).
 
 # How to upgrade the Package chart
 
 BigBang makes modifications to the upstream helm chart. The full list of changes is at the end of  this document.
 
 1. Read release notes from upstream [CHANGEME](). Be aware of changes that are included in the upgrade, you can find those by [comparing the current and new revision CHANGEME](). Take note of any manual upgrade steps that customers might need to perform, if any.
-1. Do diff of [upstream chart CHANGEME]() between old and new release tags to become aware of any significant chart changes. A graphical diff tool such as [Meld](https://meldmerge.org/) is useful. You can see where the current helm chart came from by inspecting `/chart/Kptfile`.
+1. Do diff of [upstream chart CHANGEME]() between old and new release tags to become aware of any significant chart changes. A graphical diff tool such as [Meld](https://meldmerge.org/) is useful. 
+
 1. Create a development branch and merge request tied to the Repo1 issue created for the package upgrade.  The association between the branch and the issue can be made by prefixing the branch name with the issue number, e.g. `56-update-package`. DO NOT create a branch if working `renovate/ironbank`. Continue edits on `renovate/ironbank`.
-1. From the root of this repository, sync the BigBang package chart with the upstream chart using `kpt pkg update chart@<target version> --strategy alpha-git-patch`.  Please note that `kpt` > v1.0.0 does *NOT* support this update strategy, and the latest `kpt` version that does is `0.39.2`. If you encounter any issue with `kpt` trying to retrieve the new chart, you may need to clear the `kpt` cache by running `rm -rf ~/.kpt/*`
-1. Resolve any conflicts that may occur during the `kpt pkg update` process. A graphical diff tool like [Meld](https://meldmerge.org/) is useful. Reference the "Modifications made to upstream chart" section below. Be careful not to overwrite Big Bang Package changes that need to be kept. Note that some files will have combinations of changes that you will overwrite and changes that you keep. Stay alert. The hardest file to update is the `/chart/values.yaml` because the changes are many and complicated.  Once conflicts have been resolved, use `git add` to add the files with resolved conflicts before running `git am --continue` to proceed.
-1. Delete all the `/chart/charts/*.tgz` files and the `/chart/requirements.lock`. You will replace these files in a later step.
-1. In `/chart/requirements.yaml` update the gluon library to the latest version.
+
 1. Run a helm dependency command to update the `chart/charts/*.tgz` archives and create a new requirements.lock file. You will commit the tar archives along with the requirements.lock that was generated.
 
     ```bash
     helm dependency update ./chart
     ```
 
-1. In `/chart/values.yaml` update all the image tags to the new version.
-1. Update `/CHANGELOG.md` with an entry for "upgrade to app version X.X.X chart version X.X.X-bb.X". Or, whatever description is appropriate.
-1. Update the `/README.md` following the [gluon library script](https://repo1.dso.mil/platform-one/big-bang/apps/library-charts/gluon/-/blob/master/docs/bb-package-readme.md).
-1. Update `/chart/Chart.yaml` to the appropriate versions. The annotation version should match the `appVersion`.
+1. In `/chart/values.yaml` verify all the image tags to the new version are updated.
+1. Verify `/CHANGELOG.md` with an entry for "upgrade to app version X.X.X chart version X.X.X-bb.X". Or, whatever description is appropriate.
+1. Verify the `/README.md` or follow the [gluon library script](https://repo1.dso.mil/platform-one/big-bang/apps/library-charts/gluon/-/blob/master/docs/bb-package-readme.md).
+1. Verify `/chart/Chart.yaml` to the appropriate versions. The annotation version should match the `appVersion`.
 
     ```yaml
     version: X.X.X-bb.X
@@ -116,6 +114,3 @@ Everything under this directory is a modification to the upstream chart.  The fi
   - `sidecars/` - Istio sidecars.  This is a high-impact integration and requires additional testing when changes are made.
   - `virtual-services/` - Istio virtual services.  This is a high-impact integration and requires additional testing when changes are made.
 - `networkpolicies/` - Network policies.  This is a high-impact integration and requires additional testing when changes are made.
-- `tests/`
-
-- CHANGEME: Add more files here
