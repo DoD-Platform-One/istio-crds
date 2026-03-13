@@ -15,7 +15,7 @@ BigBang makes modifications to the upstream helm chart. The full list of changes
 1. Read release notes from upstream [CHANGEME](). Be aware of changes that are included in the upgrade, you can find those by [comparing the current and new revision CHANGEME](). Take note of any manual upgrade steps that customers might need to perform, if any.
 1. Do diff of [upstream chart CHANGEME]() between old and new release tags to become aware of any significant chart changes. A graphical diff tool such as [Meld](https://meldmerge.org/) is useful. 
 
-1. Create a development branch and merge request tied to the Repo1 issue created for the package upgrade.  The association between the branch and the issue can be made by prefixing the branch name with the issue number, e.g. `56-update-package`. DO NOT create a branch if working `renovate/ironbank`. Continue edits on `renovate/ironbank`.
+1. Create a development branch and merge request tied to the Repo1 issue created for the package upgrade.  The association between the branch and the issue can be made by prefixing the branch name with the issue number, e.g. `56-update-package`. DO NOT create a branch if working `renovate/istio-crds`. Continue edits on `renovate/istio-crds`.
 
 1. Run a helm dependency command to update the `chart/charts/*.tgz` archives and create a new requirements.lock file. You will commit the tar archives along with the requirements.lock that was generated.
 
@@ -113,4 +113,4 @@ Everything under this directory is a modification to the upstream chart.  The fi
   - `service-entries/` - Istio service entries.  This is a high-impact integration and requires additional testing when changes are made.
   - `sidecars/` - Istio sidecars.  This is a high-impact integration and requires additional testing when changes are made.
   - `virtual-services/` - Istio virtual services.  This is a high-impact integration and requires additional testing when changes are made.
-- `networkpolicies/` - Network policies.  This is a high-impact integration and requires additional testing when changes are made.
+- `network-policies/` - Network policies.  This is a high-impact integration and requires additional testing when changes are made.
